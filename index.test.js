@@ -5,8 +5,9 @@ const {seedRestaurant} = require('./seedData')
 describe('app endpoints', ()=> {
     test("GET /restaurants", async() => {
         const response = await request(app).get("/restaurants");
+        expect(Array.isArray(response.body)).toBe(true)
         expect(response.statusCode).toBe(200);
-        // expect(response.body).toHaveLength(9);
+        expect(response.body.length > 1).toBe(true);
         expect(response.body[2].name).toEqual(seedRestaurant[2].name);
     })
     test("Get /restaurants:id", async() => {
@@ -29,7 +30,7 @@ describe('app endpoints', ()=> {
                                 .send({
                                     location: 'Southern USA'
                                 })
-                                console.log(response.body)
+                                // console.log(response.body)
         expect(response.statusCode).toBe(200)                       
     })
     

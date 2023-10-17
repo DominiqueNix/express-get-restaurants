@@ -32,7 +32,7 @@ app.post('/restaurants', [
         res.json({error: errors.array()})
     } else {
         let newRestaurant = await Restaurant.create(req.body)
-        console.log(newRestaurant)
+        // console.log(newRestaurant)
         res.json(newRestaurant)  
     }
     
