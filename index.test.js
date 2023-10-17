@@ -37,4 +37,50 @@ describe('app endpoints', ()=> {
         const response = await request(app).delete('/restaurant/17')
         expect(response.statusCode).toBe(200)
     })
+
+    test("POST /restaurants receives an error is name, location, or cuisine is empty", async() => {
+        const response1 = await request(app).post("/restaurants").send({
+            "name": "",
+            "location": "Texas",
+            "cuisine": "American"
+        });
+        const response2 = await request(app).post("/restaurants").send({
+            "name": "Chillis",
+            "location": "",
+            "cuisine": "American"
+        })
+        const response3 = await request(app).post("/restaurants").send({
+            "name": "Chillis",
+            "location": "Texas",
+            "cuisine": ""
+        })    
+        // console.log(response1.body.error)
+        expect(response1.body.error).toEqual([
+            {
+              type: 'field',
+              value: '',
+              msg: 'Invalid value',
+              path: 'name',
+              location: 'body'
+            }
+          ])
+          expect(response2.body.error).toEqual([
+            {
+              type: 'field',
+              value: '',
+              msg: 'Invalid value',
+              path: 'location',
+              location: 'body'
+            }
+          ])
+          expect(response3.body.error).toEqual([
+            {
+              type: 'field',
+              value: '',
+              msg: 'Invalid value',
+              path: 'cuisine',
+              location: 'body'
+            }
+          ])
+    })
 })

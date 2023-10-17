@@ -4,6 +4,8 @@ const {Restaurant }= require("../models/index")
 const db = require("../db/connection");
 const {Menu} = require("../models/index");
 const {Item }= require("../models/index");
+const { check,validationResult } = require("express-validator");
+
 
 //TODO: Create your GET Request Route Below: 
 app.get('/restaurants', async (req, res) => {
@@ -20,11 +22,20 @@ app.get('/restaurants/:id', async(req, res) => {
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.post('/restaurants', async(req,res) => {
-    // let data = req.body;
-    let newRestaurant = await Restaurant.create(req.body)
-    console.log(newRestaurant)
-    res.json(newRestaurant)
+app.post('/restaurants', [
+    check("name").not().isEmpty().trim(),
+    check("location").not().isEmpty().trim(), 
+    check("cuisine").not().isEmpty().trim()
+] ,async(req,res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        res.json({error: errors.array()})
+    } else {
+        let newRestaurant = await Restaurant.create(req.body)
+        console.log(newRestaurant)
+        res.json(newRestaurant)  
+    }
+    
 })
 
 app.put('/restaurant/:id', async(req,res) => {
